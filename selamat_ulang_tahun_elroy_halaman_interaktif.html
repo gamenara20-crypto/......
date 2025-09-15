@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selamat Ulang Tahun, Elroy 🎉</title>
+  <style>
+    :root{--bg:#0f172a;--card:#0b1220;--accent:#ff6b6b;--muted:#cbd5e1}
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071024 0%, #0b1220 100%);color:white;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);backdrop-filter: blur(6px);padding:28px;border-radius:16px;max-width:760px;width:100%;box-shadow:0 10px 30px rgba(2,6,23,0.6)}
+    h1{font-size:28px;margin:0 0 8px}
+    p.lead{color:var(--muted);margin:0 0 20px}
+    .question{margin:18px 0}
+    .choices{display:flex;gap:12px;flex-wrap:wrap}
+    button.choice{flex:1;min-width:160px;padding:12px 16px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));color:white;font-weight:600;cursor:pointer;transition:transform .12s,box-shadow .12s}
+    button.choice:hover{transform:translateY(-4px);box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    .message{margin-top:16px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);color:var(--muted)}
+    .wrong{color:#ffd6d6}
+    .correct{color:#d1ffd6}
+    .center{text-align:center}
+    .surprise{display:none;align-items:center;gap:18px}
+    .cake{width:140px;height:140px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff6e7,#ffd8a8);color:#5b3b00;box-shadow:0 6px 18px rgba(0,0,0,0.3)}
+    .poem{font-size:16px;color:#f8f9fa;line-height:1.45}
+    .small{font-size:13px;color:var(--muted)}
+    .retry{margin-top:10px}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    /* confetti canvas covers whole card */
+    #confetti{position:absolute;pointer-events:none;left:0;top:0;width:100%;height:100%;}
+    .relative{position:relative}
+    @media (max-width:560px){h1{font-size:22px}.cake{width:120px;height:120px}}
+  </style>
+</head>
+<body>
+  <div class="card relative" id="card">
+    <canvas id="confetti"></canvas>
+    <h1>Selamat Ulang Tahun, Elroy! 🎉💖</h1>
+    <p class="lead">Sebelum kejutan, yuk jawab dulu soal singkat OSN IPA — pilih jawaban yang menurutmu benar.</p>
+
+    <div id="quiz">
+      <div class="question">
+        <strong>Soal:</strong>
+        <p>Manakah pernyataan berikut yang benar mengenai fotosintesis pada tumbuhan?</p>
+      </div>
+      <div class="choices">
+        <button class="choice" data-correct="true">Fotosintesis menghasilkan glukosa dan memerlukan energi cahaya.</button>
+        <button class="choice" data-correct="false">Fotosintesis terjadi terutama pada akar tumbuhan karena akar menyerap air.</button>
+      </div>
+      <div id="feedback" class="message" aria-live="polite" style="display:none"></div>
+    </div>
+
+    <div id="surprise" class="surprise">
+      <div style="flex:1">
+        <div class="center">
+          <div class="cake" aria-hidden="true">
+            <!-- simple SVG cake -->
+            <svg width="90" height="90" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="28" width="52" height="18" rx="3" fill="#fff"/>
+              <rect x="10" y="22" width="44" height="8" rx="2" fill="#ffd8a8"/>
+              <path d="M20 22c0-4 4-6 12-6s12 2 12 6" fill="#ffb86b"/>
+              <rect x="26" y="8" width="4" height="10" rx="2" fill="#ff6b6b"/>
+              <rect x="34" y="8" width="4" height="10" rx="2" fill="#ff6b6b"/>
+            </svg>
+          </div>
+          <h2 style="margin:12px 0 6px">Yeay! Jawabanmu benar 🎉</h2>
+          <h3 style="margin:0 0 8px;color:#ffd6a5">Selamat Ulang Tahun, Elroy! ❤️</h3>
+        </div>
+        <p class="poem">Di hari ini kupilih berharap —<br>senyummu terlipat cahaya, langkahmu selalu ringan. 🎂✨</p>
+        <p class="small">Tekan tombol di bawah untuk melihat kejutan.</p>
+        <div style="margin-top:12px">
+          <button id="openSurprise" class="choice">Buka Kejutan</button>
+        </div>
+      </div>
+
+      <div style="width:300px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div style="background:linear-gradient(180deg,#061022, #0b1b34);padding:14px;border-radius:12px;width:100%;box-shadow:0 8px 24px rgba(2,6,23,0.6)">
+          <p style="margin:0;text-align:center;font-weight:700">Kejutan</p>
+          <p style="margin:6px 0 0;text-align:center;color:var(--muted);font-size:13px">Hadiah digital penuh cinta ❤️</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="final" style="display:none;margin-top:18px">
+      <div class="center">
+        <h2>Surprise! 🎁</h2>
+        <p class="lead">Ini kado spesial buatmu: sebuah lirik pendek & kartu digital.</p>
+        <div style="margin:12px 0;padding:12px;border-radius:10px;background:linear-gradient(180deg,#07112a,#05203a);">
+          <p style="margin:0;color:#e6fdf2"><strong>Untuk Elroy —</strong></p>
+          <p style="margin:6px 0 0;color:#bfe7d0">Di setiap detik, ada alasan untuk tersenyum. Semoga tahun ini penuh petualangan, cinta, dan kemenangan. 🌟</p>
+        </div>
+        <p class="small">Klik tombol di bawah untuk memulai lagi atau membagikan kebahagiaan ini.</p>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+          <button id="restart" class="choice">Main Lagi</button>
+          <button id="share" class="choice">Salin Pesan</button>
+        </div>
+      </div>
+    </div>
+
+    <footer>Made with ❤️ — Kejutan sederhana dari aku untuk Elroy.</footer>
+  </div>
+
+  <script>
+    // Quiz handling
+    const choices = document.querySelectorAll('button.choice');
+    const feedback = document.getElementById('feedback');
+    const quiz = document.getElementById('quiz');
+    const surprise = document.getElementById('surprise');
+    const final = document.getElementById('final');
+    const openSurprise = document.getElementById('openSurprise');
+    const restart = document.getElementById('restart');
+    const share = document.getElementById('share');
+
+    choices.forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const correct = btn.getAttribute('data-correct') === 'true';
+        if(quiz.contains(btn)){
+          if(!correct){
+            feedback.style.display='block';
+            feedback.className='message wrong';
+            feedback.textContent='Maaf, anda salah. Coba lagi.';
+          } else {
+            feedback.style.display='block';
+            feedback.className='message correct';
+            feedback.textContent='Benar! Siap untuk kejutan.';
+            // reveal surprise area
+            setTimeout(()=>{
+              quiz.style.display='none';
+              surprise.style.display='flex';
+            },700);
+          }
+        }
+      });
+    });
+
+    openSurprise.addEventListener('click',()=>{
+      // start confetti and reveal final
+      startConfetti();
+      surprise.style.display='none';
+      final.style.display='block';
+      document.getElementById('card').scrollIntoView({behavior:'smooth'});
+    });
+
+    restart.addEventListener('click',()=>location.reload());
+
+    share.addEventListener('click',()=>{
+      const text = `Selamat Ulang Tahun, Elroy! Semoga bahagia dan selalu diberkati. 🎉❤️`;
+      navigator.clipboard?.writeText(text).then(()=>alert('Pesan disalin!')); 
+    });
+
+    // Simple confetti using canvas
+    function startConfetti(){
+      const canvas = document.getElementById('confetti');
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width; const H = canvas.height;
+      const pieces = [];
+      for(let i=0;i<120;i++){
+        pieces.push({x:Math.random()*W,y:Math.random()*H- H, r:Math.random()*6+4, d:Math.random()*60+10, tilt:Math.random()*10-10, color:randomColor()});
+      }
+      let angle = 0;
+      const anim = setInterval(()=>{
+        ctx.clearRect(0,0,W,H);
+        angle += 0.01;
+        for(let i=0;i<pieces.length;i++){
+          const p = pieces[i];
+          p.y += Math.cos(angle + p.d) + 1 + p.r/2;
+          p.x += Math.sin(angle);
+          p.tilt += Math.sin(angle)*0.2;
+          ctx.save();
+          ctx.translate(p.x,p.y);
+          ctx.rotate(p.tilt * Math.PI/180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.8);
+          ctx.restore();
+          if(p.y > H + 20){ p.y = -10; p.x = Math.random()*W; }
+        }
+      },16);
+      // stop after 8s
+      setTimeout(()=>{clearInterval(anim); ctx.clearRect(0,0,W,H);},8000);
+
+      function randomColor(){
+        const palette = ['#ff6b6b','#ffd166','#6bf7c1','#9b8cff','#ff9adb'];
+        return palette[Math.floor(Math.random()*palette.length)];
+      }
+    }
+
+    // Accessibility: focus first choice
+    document.querySelector('.choices button')?.focus();
+  </script>
+</body>
+</html>
